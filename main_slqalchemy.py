@@ -5,8 +5,9 @@ from dotenv import load_dotenv
 
 from sqlalchemy import create_engine, select
 from sqlalchemy.orm import sessionmaker
-from src.models.client import Client
-from src.models.payment import Payment
+from src.models.mechanical_shop.client import Client
+from src.models.mechanical_shop.product import Product
+from src.models.mechanical_shop.sales import Sales
 
 # Load environment variables from .env
 load_dotenv()
@@ -28,10 +29,12 @@ session = SessionLocal()
 
 try:
     query = (
-        select(Client.id, Client.name, Client.email, Payment.amount)
+        select(Client.dni, Client.name, Product.description, Sales.sold_date)
         .select_from(Client)
-        .join(Payment, Client.id == Payment.client_id)
+        .join(Sales, Client.client_id == Sales.client_id)
+        .join(Product, Product.product_id == Sales.product_id)
     )
+
     results = session.execute(query).fetchall()
 finally:
     session.close()
@@ -48,4 +51,4 @@ print(df)
 # Print using attribute names
 print("\nResult using attribute names:")
 for row in results:
-    print(row.id, row.name, row.email, row.amount)
+    print(row.dni, row.name, row.description, row.sold_date)
