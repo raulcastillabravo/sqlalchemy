@@ -5,6 +5,9 @@ name = "pypi"
 
 [packages]
 pandas = "*"
+python-dotenv = "*"
+psycopg2 = "*"
+sqlalchemy = "*"
 
 [dev-packages]
 
