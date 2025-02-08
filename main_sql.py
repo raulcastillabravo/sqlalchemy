@@ -19,19 +19,19 @@ try:
     connection = psycopg2.connect(
         user=USER, password=PASSWORD, host=HOST, port=PORT, dbname=DBNAME
     )
-    print("Connection successful!")
 
     # Create a cursor to execute SQL queries
     cursor = connection.cursor()
 
     query = """
         SELECT 
-            c.id, 
+            c.dni, 
             c.name, 
-            c.email, 
-            p.amount
-        FROM clients c 
-        INNER JOIN payments p ON c.id = p.client_id;
+            p.description, 
+            s.sold_date
+        FROM client c
+        INNER JOIN sales s ON c.client_id = s.client_id
+        INNER JOIN product p ON p.product_id = s.product_id
     """
 
     # Example query
@@ -41,7 +41,6 @@ try:
     # Close the cursor and connection
     cursor.close()
     connection.close()
-    print("Connection closed.")
 
 except Exception as e:
     print(f"Failed to connect: {e}")
